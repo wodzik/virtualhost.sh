@@ -1,8 +1,12 @@
-## Downloading
+This is fork from: https://github.com/pgib/virtualhost.sh
+and there from the ubuntu branch: https://github.com/pgib/virtualhost.sh/tree/ubuntu
 
-You can grab the [script here](https://github.com/pgib/virtualhost.sh/raw/master/virtualhost.sh) (Option-click to download.)
+It adds a installer script for symfony 1.4 that afterwards calls a modified version of this neat virtualhost creator script.
+Its designed for Ubuntu.
 
-## Documentation
+Its supposed to let you start a new symfony 1.4 project on your ubuntu dev machine "rapido"!
 
-See the [wiki](https://github.com/pgib/virtualhost.sh/wiki)
+It fetches the latest symfony 1.4 from the subversion repo, goes through all necessary steps for a project setup and creates a virtualhost on your dev machine.
+
+
 

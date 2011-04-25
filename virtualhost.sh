@@ -2,6 +2,9 @@
 #================================================================================
 # virtualhost.sh                                                            
 #
+# Forked by Ivo Bathke 
+# extended espially for the use with symfony
+#
 # A fancy little script to setup a new virtualhost in Ubuntu based upon the  
 # excellent virtualhost (V1.04) script by Patrick Gibson <patrick@patrickg.com> for OS X.
 #
@@ -15,7 +18,11 @@
 # CREATE A VIRTUAL HOST:
 # sudo ./virtualhost <name>
 # where <name> is the one-word name you'd like to use. (e.g. mysite)
-#   
+# 
+# if you wish to hace symfony's web folder used
+# type: 
+# sudo ./virtualhost <name> --symfony
+#  
 # Note that if "virtualhost.sh" is not in your PATH, you will have to write
 # out the full path to where you've placed: eg. /usr/bin/virtualhost.sh <name>
 # 
@@ -247,7 +254,7 @@ if ! grep -q -E "^NameVirtualHost $IP_ADDRESS" $APACHE_CONFIG/$APACHE_CONFIG_FIL
 	if [ ! -d $APACHE_CONFIG/$APACHE_VIRTUAL_HOSTS_AVAILABLE ]; then
 		mkdir $APACHE_CONFIG/$APACHE_VIRTUAL_HOSTS_AVAILABLE
 		cat << __EOT > $APACHE_CONFIG/$APACHE_VIRTUAL_HOSTS_AVAILABLE/_localhost
-<VirtualHost $IP_ADDRESS>
+<VirtualHost *:80>
   DocumentRoot $DOC_ROOT_PREFIX
   ServerName localhost
 
@@ -339,10 +346,13 @@ case $resp in
 	*) FOLDER=$VIRTUALHOST
 	;;
 esac
+#check for symfony flag
+if [ $2 = "--symfony" ]; then
+	FOLDER=[${FOLDER}web/]
+fi
 
-
-# Create the folder if we need to...
 if [ ! -d $DOC_ROOT_PREFIX/$FOLDER ]; then
+#TODO if --symfony then dont create
 	echo -n "  + Creating folder $DOC_ROOT_PREFIX/$FOLDER... "
 	# su $USER -c "mkdir -p $DOC_ROOT_PREFIX/$FOLDER"
 	mkdir -p $DOC_ROOT_PREFIX/$FOLDER
@@ -379,7 +389,7 @@ if [ ! -d $DOC_ROOT_PREFIX/$FOLDER ]; then
 	echo "done"
 fi
 
-
+#TODO if --symfony flag dont create
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Create a default index.html if there isn't already one there
 #
@@ -444,16 +454,16 @@ fi
 
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Create a default virtualhost file
+# web is symfony
+# check symfony flag
 #
 echo -n "+ Creating virtualhost file... "
 cat << __EOF >$APACHE_CONFIG/$APACHE_VIRTUAL_HOSTS_AVAILABLE/$VIRTUALHOST
-<VirtualHost 127.0.0.1>
-  DocumentRoot $DOC_ROOT_PREFIX/$FOLDER
+<VirtualHost *:80>
+  DocumentRoot $DOC_ROOT_PREFIX/$FOLDER/
   ServerName $VIRTUALHOST
 
-  ScriptAlias /cgi-bin $DOC_ROOT_PREFIX/$FOLDER/cgi-bin
-
-  <Directory $DOC_ROOT_PREFIX/$FOLDER>
+  <Directory $DOC_ROOT_PREFIX/$FOLDER/>
     Options All
     AllowOverride All
   </Directory>
