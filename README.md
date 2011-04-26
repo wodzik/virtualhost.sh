@@ -10,4 +10,4 @@ Its supposed to let you start a new symfony 1.4 project on your ubuntu dev machi
 
 It fetches the latest symfony 1.4 from the subversion repo, goes through all necessary steps for a project setup and creates a virtualhost on your dev machine.
 
-call it like: ./symfony_installer.sh <mysymfony>
+call it like: ./symfony_installer.sh mysymfony
