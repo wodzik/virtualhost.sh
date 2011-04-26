@@ -9,4 +9,8 @@ Its supposed to let you start a new symfony 1.4 project on your ubuntu dev machi
 It fetches the latest symfony 1.4 from the subversion repo, goes through all necessary steps for a project setup and creates a virtualhost on your dev machine.
 
 
+<<<<<<< HEAD:README.md
+=======
+See the [wiki](https://github.com/pgib/virtualhost.sh/wiki/_pages)
+>>>>>>> 08dd813abcbf0d658dc65cab53643e9a959daab6:README.md
 
