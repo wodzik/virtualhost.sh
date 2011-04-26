@@ -1,6 +1,7 @@
 This is fork from: https://github.com/pgib/virtualhost.sh
 and there from the ubuntu branch: https://github.com/pgib/virtualhost.sh/tree/ubuntu
-the changes are now in ubuntu-symfony branch
+
+The changes are now in ubuntu-symfony branch.
 
 It adds a installer script for symfony 1.4 that afterwards calls a modified version of this neat virtualhost creator script.
 Its designed for Ubuntu.

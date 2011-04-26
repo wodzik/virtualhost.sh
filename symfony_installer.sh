@@ -2,7 +2,7 @@
 # USAGE:
 # 
 # CREATE A SYMFONY PROJECT:
-# sudo ./symfony_installer <name>
+# ./symfony_installer <name>
 # where <name> is the one-word name you'd like to use. (e.g. mysite)
 
 # By default, this script places files in /home/[you]/Sites. If you would like
@@ -35,6 +35,7 @@ if [ -z $DOC_ROOT_PREFIX ]; then
 	DOC_ROOT_PREFIX="/home/$USER/Sites"
 fi
 
+cd $DOC_ROOT_PREFIX
 mkdir $PROJECT
 cd $PROJECT
 mkdir -p lib/vendor
@@ -66,6 +67,8 @@ read dbuser
 echo "enter db passwort: "
 read dbpass
 php symfony configure:database "$dsn" $dbuser $dbpass
+
+#TODO if dsn contains mysql -> create db
 
 #Use git?
 echo -n "- Create .gitignore... Continue? [Y/n]:"
