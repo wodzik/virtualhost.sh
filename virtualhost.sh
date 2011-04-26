@@ -254,7 +254,7 @@ if ! grep -q -E "^NameVirtualHost $IP_ADDRESS" $APACHE_CONFIG/$APACHE_CONFIG_FIL
 	if [ ! -d $APACHE_CONFIG/$APACHE_VIRTUAL_HOSTS_AVAILABLE ]; then
 		mkdir $APACHE_CONFIG/$APACHE_VIRTUAL_HOSTS_AVAILABLE
 		cat << __EOT > $APACHE_CONFIG/$APACHE_VIRTUAL_HOSTS_AVAILABLE/_localhost
-<VirtualHost *:80>
+<VirtualHost $IP_ADDRESS>
   DocumentRoot $DOC_ROOT_PREFIX
   ServerName localhost
 
@@ -348,11 +348,12 @@ case $resp in
 esac
 #check for symfony flag
 if [ $2 = "--symfony" ]; then
-	FOLDER=[${FOLDER}web/]
+	FOLDER=$FOLDER/web
 fi
 
+
+# Create the folder if we need to...
 if [ ! -d $DOC_ROOT_PREFIX/$FOLDER ]; then
-#TODO if --symfony then dont create
 	echo -n "  + Creating folder $DOC_ROOT_PREFIX/$FOLDER... "
 	# su $USER -c "mkdir -p $DOC_ROOT_PREFIX/$FOLDER"
 	mkdir -p $DOC_ROOT_PREFIX/$FOLDER
@@ -389,7 +390,6 @@ if [ ! -d $DOC_ROOT_PREFIX/$FOLDER ]; then
 	echo "done"
 fi
 
-#TODO if --symfony flag dont create
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # Create a default index.html if there isn't already one there
 #

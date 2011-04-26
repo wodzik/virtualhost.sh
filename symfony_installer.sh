@@ -16,6 +16,8 @@ VHOSTEXTENSION=local
 #vhost script that you call afterwards for vhost creation
 VHOST_SCRIPT="virtualhost.sh"
 
+EXEC_DIR=$(cd -P -- "$(dirname -- "$0")" && pwd -P)
+
 usage()
 {
 	cat << __EOT
@@ -55,7 +57,7 @@ php symfony generate:app $app
 #TODO ask for more apps
 
 chmod 777 cache/ log/
-ln -s /srv/www/$PROJECT/lib/vendor/symfony/data/web/sf web/sf
+ln -s $DOC_ROOT_PREFIX/$PROJECT/lib/vendor/symfony/data/web/sf web/sf
 
 echo "configure the database"
 echo "caution: we will use doctrine on localhost"
@@ -104,8 +106,10 @@ echo -n "- Create vhost. Continue? [Y/n]:"
 read continue
 	
 case $continue in
-	y*|Y*) 
-	sudo .././$VHOST_SCRIPT $PROJECT
+	y*|Y*)
+	echo $EXEC_DIR
+	cd $EXEC_DIR 
+	sudo ./$VHOST_SCRIPT $PROJECT --symfony
 	esac
 exit 0
 
