@@ -5,6 +5,8 @@
 # ./symfony_installer <name>
 # where <name> is the one-word name you'd like to use. (e.g. mysite)
 
+#Caution dont run with sudo: that will mess up your user
+
 # By default, this script places files in /home/[you]/Sites. If you would like
 # to change this, like to how Apache on Ubuntu does things by default, uncomment the
 # following line:
@@ -59,6 +61,7 @@ php symfony generate:app $app
 chmod 777 cache/ log/
 ln -s $DOC_ROOT_PREFIX/$PROJECT/lib/vendor/symfony/data/web/sf web/sf
 
+#TODO put dsn together so that db can be created here
 echo "configure the database"
 echo "caution: we will use doctrine on localhost"
 echo "enter dsn: "
@@ -70,7 +73,15 @@ echo "enter db passwort: "
 read dbpass
 php symfony configure:database "$dsn" $dbuser $dbpass
 
-#TODO if dsn contains mysql -> create db
+#if dsn contains mysql -> create db
+case $dsn in
+	mysql*) echo "Create Mysql Database? [Y/n]:"
+		read create
+		case $create in
+			y*|Y*) mysql -u$dbuser -p $dbpass;
+				#TODO automatic
+		esac
+esac
 
 #Use git?
 echo -n "- Create .gitignore... Continue? [Y/n]:"
@@ -100,7 +111,6 @@ case $continue in
 	y*|Y*) gitignore > .gitignore
 	esac
 
-#TODO git import
 #create vhost
 echo -n "- Create vhost. Continue? [Y/n]:"
 read continue
