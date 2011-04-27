@@ -156,7 +156,10 @@ if [ ! -z $DELETE ]; then
 		if [ -e $APACHE_CONFIG/$APACHE_VIRTUAL_HOSTS_ENABLED/$VIRTUALHOST ]; then
 			DOCUMENT_ROOT=`grep DocumentRoot $APACHE_CONFIG/$APACHE_VIRTUAL_HOSTS_ENABLED/$VIRTUALHOST | awk '{print $2}'`
 			
-			#TODO --symfony flag then one dir up
+			#check for symfony flag
+			if [ $3 = "--symfony" ]; then
+				DOCUMENT_ROOT = ${DOCUMENT_ROOT%/*}
+			fi
 			if [ -d $DOCUMENT_ROOT ]; then
 				echo -n "  + Found DocumentRoot $DOCUMENT_ROOT. Delete this folder? [y/N]: "
 
