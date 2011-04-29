@@ -61,20 +61,22 @@ php symfony generate:app $app
 chmod 777 cache/ log/
 ln -s $DOC_ROOT_PREFIX/$PROJECT/lib/vendor/symfony/data/web/sf web/sf
 
-#TODO put dsn together so that db can be created here
 echo "configure the database"
-echo "caution: we will use doctrine on localhost"
-echo "enter dsn: "
-echo "f.e. something like this: sqlite:%SF_DATA_DIR%/sandbox.db"
-read dsn
+echo "caution: we will use doctrine"
+echo "enter db driver: "
+read dbdriver
+echo "enter db host: "
+read dbhost
+echo "enter db name: "
+read dbname
 echo "enter db user: "
 read dbuser
 echo "enter db passwort: "
 read dbpass
-php symfony configure:database "$dsn" $dbuser $dbpass
+php symfony configure:database "$dbdriver:host=$dbhost;dbname=$dbname" $dbuser $dbpass
 
 #if dsn contains mysql -> create db
-case $dsn in
+case $dbdriver in
 	mysql*) echo "Create Mysql Database? [Y/n]:"
 		read create
 		case $create in

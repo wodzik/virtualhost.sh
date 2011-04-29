@@ -31,6 +31,8 @@
 #
 # where <site> is the site name you used when you first created the host. 
 #
+# IF YOUR PROJECT IS A SYMFONY PROJECT:
+# sudo ./virtualhost --delete <site> --symfony
 #
 #======= SCRIPT VARIABLES ======== 
 #
@@ -158,9 +160,11 @@ if [ ! -z $DELETE ]; then
 			
 			#check for symfony flag
 			if [ $3 = "--symfony" ]; then
-				DOCUMENT_ROOT = ${DOCUMENT_ROOT%/*}
+				echo "symfony flag set" 
+				DOCUMENT_ROOT=${DOCUMENT_ROOT%/web*}
 			fi
 			if [ -d $DOCUMENT_ROOT ]; then
+				
 				echo -n "  + Found DocumentRoot $DOCUMENT_ROOT. Delete this folder? [y/N]: "
 
 				read resp
