@@ -63,6 +63,7 @@
 #
 #======= DO NOT EDIT BELOW THIS lINE UNLESS YOU KNOW WHAT YOU ARE DOING ======== 
 
+# No point going any farther if we're not running correctly...
 if [ `whoami` != 'root' ]; then
 
 	echo "You must be running with root privileges to run this script."
@@ -394,12 +395,12 @@ if [ ! -e $DOC_ROOT_PREFIX/$FOLDER/index.html -a ! -e $DOC_ROOT_PREFIX/$FOLDER/i
 <html>
 <head>
 <title>Welcome to $VIRTUALHOST</title>
-</head>
 <style type="text/css">
  body, div, td { font-family: "Lucida Grande"; font-size: 12px; color: #666666; }
  b { color: #333333; }
  .indent { margin-left: 10px; }
 </style>
+</head>
 <body link="#993300" vlink="#771100" alink="#ff6600">
 
 <table border="0" width="100%" height="95%"><tr><td align="center" valign="middle">
