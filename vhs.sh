@@ -6,21 +6,6 @@
 # excellent virtualhost (V1.04) script by Patrick Gibson <patrick@patrickg.com> for OS X.
 #
 
-
-# No point going any farther if we're not running correctly...
-if [ `whoami` != 'root' ]; then
-  echo "virtualhost.sh requires super-user privileges to work."
-  echo "Enter your password to continue..."
-  sudo "$0" $* || exit 1
-  exit 0
-fi
-
-#if [ "$SUDO_USER" = "root" ]; then
-#  /bin/echo "You must start this under your regular user account (not root) using sudo."
-#  /bin/echo "Rerun using: sudo $0 $*"
-#  exit 1
-#fi
-
 # - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 # If you are using this script on a production machine with a static IP address,
 # and you wish to setup a "live" virtualhost, you can change the following IP
@@ -63,6 +48,20 @@ fi
 ###############################################################################
 ########                         FUNCTIONS                         ############
 ###############################################################################
+run_sudo()
+{
+  echo "virtualhost.sh requires super-user privileges to work."
+  echo "Enter your password to continue..."
+  sudo "$0" $* || exit 1
+  exit 0
+}
+
+set_perms()
+{
+  host_dir=$1
+  setfacl -Rm g:`$OWNER_GROUP`:rwX `$host_dir`
+  setfacl -d -Rm g:`$OWNER_GROUP`:rwX `$host_dir`
+}
 
 usage()
 {
@@ -116,7 +115,6 @@ create_virtualhost()
     <Directory $2>
       Options All
       AllowOverride All
-      Require local
     </Directory>
   </VirtualHost>
 __EOT
@@ -143,6 +141,10 @@ delete_from_hosts()
 
 delete_host()
 {
+  if [ `whoami` != 'root' ]; then
+    run_sudo $@
+  fi
+
   if [ -z $2 ] ; then
    usage
    exit 1
@@ -159,13 +161,17 @@ delete_host()
     service apache2 reload
   fi
 
-  if is_in_hosts $host_name ; then
-    delete_from_hosts $host_name
+  if is_in_hosts ${host_name} ; then
+    delete_from_hosts ${host_name}
   fi
 }
 
 add_host()
 {
+  if [ `whoami` != 'root' ]; then
+    run_sudo $@
+  fi
+
   if [ -z $1 ] ; then
    usage
    exit 1
@@ -182,10 +188,12 @@ add_host()
     host_dir=`cd $2;pwd`
   fi
 
+  set_perms ${host_dir}
+
   if host_exiest ${host_name} ; then
     echo "Host alredy exist."
   else
-    create_virtualhost $host_name $host_dir
+    create_virtualhost ${host_name} ${host_dir}
   fi
 
   if is_in_hosts ${host_name} ; then
@@ -194,7 +202,7 @@ add_host()
     echo "$IP_ADDRESS\t$host_name" >> "/etc/hosts"
   fi
 
-  a2ensite $host_name".conf"
+  a2ensite ${host_name}".conf"
   service apache2 reload
 }
 
